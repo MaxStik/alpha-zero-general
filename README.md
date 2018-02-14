@@ -10,7 +10,12 @@ To start training a model for Othello:
 ```bash
 python main.py
 ```
-Choose your framework in ```main.py```.
+Choose your framework and game in ```main.py```.
+
+### Implemented Games
+[Othello](./othello)
+[Tic Tac Toe](./tictactoe)
+[Gobang](https://github.com/suragnair/alpha-zero-general/gobang)
 
 ### Experiments
 We trained a PyTorch model for 6x6 Othello (~80 iterations, 100 episodes per iteration and 25 MCTS simulations per turn). This took about 3 days on an NVIDIA Tesla K80. The pretrained model (PyTorch) can be found in ```pretrained_models/pytorch/```. You can play a game against it using ```pit.py```. Below is the performance of the model against a random and a greedy baseline with the number of iterations.
@@ -27,11 +32,12 @@ While the current code is fairly functional, we could benefit from the following
 * Asynchronous MCTS as described in the paper
 
 ### Contributors and Credits
-* [Shantanu Thakoor](https://github.com/ShantanuThakoor)
-* [Megha Jhunjhunwala](https://github.com/jjw-megha)
-* [Shantanu Kumar](https://github.com/SourKream)
+* [Shantanu Thakoor](https://github.com/ShantanuThakoor) and [Megha Jhunjhunwala](https://github.com/jjw-megha) helped with core design and implementation.
+* [Shantanu Kumar](https://github.com/SourKream) contributed TensorFlow and Keras models for Othello.
+* [Evgeny Tyurin](https://github.com/evg-tyurin) contributed rules and a trained model for TicTacToe.
+* [MBoss](https://github.com/1424667164) contributed rules and a model for GoBang.
 
 Thanks to [pytorch-classification](https://github.com/bearpaw/pytorch-classification) and [progress](https://github.com/verigak/progress).
 
 ### AlphaGo / AlphaZero Events
-* February 8, 2018 - [Solving Alpha Go Zero + TensorFlow, Kubernetes-based Serverless AI Models on GPU](https://www.meetup.com/Advanced-Spark-and-TensorFlow-Meetup/events/245308722/)
+* February 8, 2018 - [Solving Alpha Go Zero + TensorFlow, Kubernetes-based Serverless AI Models on GPU](https://www.meetup.com/Advanced-Spark-and-TensorFlow-Meetup/events/245308722/) ([Youtube](https://youtu.be/dhmBrTouCKk?t=1017) / [Slides](http://static.brettkoonce.com/presentations/go.pdf))
