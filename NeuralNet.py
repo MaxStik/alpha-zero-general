@@ -1,4 +1,4 @@
-class NeuralNet():
+class NeuralNet:
     """
     This class specifies the base NeuralNet class. To define your own neural
     network, subclass this class and implement the functions below. The neural
@@ -49,7 +49,7 @@ class NeuralNet():
         """
         pass
 
-    def recreate(self, folder='checkpoint', filename='checkpoint.pth.tar'):
+    def recreate(self, folder="checkpoint", filename="checkpoint.pth.tar"):
         """ 
         Destroy wrapped NNet to clear as much resources as possible.
         Then recreate wrapped NNet and load it from the given checkpoint.

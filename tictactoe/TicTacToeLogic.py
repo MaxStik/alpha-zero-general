@@ -1,4 +1,4 @@
-'''
+"""
 Board class for the game of TicTacToe.
 Default board size is 3x3.
 Board data:
@@ -13,24 +13,34 @@ Date: Jan 5, 2018.
 
 Based on the board for the game of Othello by Eric P. Nichols.
 
-'''
+"""
 # from bkcharts.attributes import color
-class Board():
+import numpy as np
+
+
+class Board:
 
     # list of all 8 directions on the board, as (x,y) offsets
-    __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
+    __directions = [
+        (1, 1),
+        (1, 0),
+        (1, -1),
+        (0, -1),
+        (-1, -1),
+        (-1, 0),
+        (-1, 1),
+        (0, 1),
+    ]
 
     def __init__(self, n=3):
         "Set up initial board configuration."
 
         self.n = n
         # Create the empty board array.
-        self.pieces = [None]*self.n
-        for i in range(self.n):
-            self.pieces[i] = [0]*self.n
+        self.pieces = np.zeros(shape=(n, n))
 
     # add [][] indexer syntax to the Board
-    def __getitem__(self, index): 
+    def __getitem__(self, index):
         return self.pieces[index]
 
     def get_legal_moves(self, color):
@@ -43,53 +53,52 @@ class Board():
         # Get all the empty squares (color==0)
         for y in range(self.n):
             for x in range(self.n):
-                if self[x][y]==0:
-                    newmove = (x,y)
+                if self[x][y] == 0:
+                    newmove = (x, y)
                     moves.add(newmove)
         return list(moves)
 
     def has_legal_moves(self):
         for y in range(self.n):
             for x in range(self.n):
-                if self[x][y]==0:
+                if self[x][y] == 0:
                     return True
         return False
-    
+
     def is_win(self, color):
         """Check whether the given player has collected a triplet in any direction; 
         @param color (1=white,-1=black)
         """
-        win = self.n
-        # check y-strips
-        for y in range(self.n):
-            count = 0
-            for x in range(self.n):
-                if self[x][y]==color:
-                    count += 1
-            if count==win:
+        win_3 = 3
+        win_array = "".join(
+            str(int(x)) for x in np.array([color for _ in range(win_3)])
+        )
+        board = np.copy(self.pieces)
+        size = self.n
+        transposed_array = board.transpose()
+
+        # Ось X
+        for x in range(size):
+            x_array = "".join(str(int(x)) for x in board[x])
+            if win_array in x_array:
                 return True
-        # check x-strips
-        for x in range(self.n):
-            count = 0
-            for y in range(self.n):
-                if self[x][y]==color:
-                    count += 1
-            if count==win:
+
+        # Ось Y
+        for y in range(size):
+            x_array = "".join(str(int(x)) for x in transposed_array[y])
+            if win_array in x_array:
                 return True
-        # check two diagonal strips
-        count = 0
-        for d in range(self.n):
-            if self[d][d]==color:
-                count += 1
-        if count==win:
-            return True
-        count = 0
-        for d in range(self.n):
-            if self[d][self.n-d-1]==color:
-                count += 1
-        if count==win:
-            return True
-        
+
+        # Диагонали
+        for diagonal in range(board.shape[1] - 1, -board.shape[0], -1):
+            diag = board.diagonal(diagonal)
+            if len(diag) > 3:
+                string_diagonal = "".join(str(int(x)) for x in diag)
+
+                if win_array in string_diagonal:
+                    return True
+
+        # Если ничего не нашли то False
         return False
 
     def execute_move(self, move, color):
@@ -97,9 +106,8 @@ class Board():
         color gives the color pf the piece to play (1=white,-1=black)
         """
 
-        (x,y) = move
+        (x, y) = move
 
         # Add the piece to the empty square.
         assert self[x][y] == 0
         self[x][y] = color
-
