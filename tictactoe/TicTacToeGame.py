@@ -1,7 +1,7 @@
 from __future__ import print_function
 import sys
 
-sys.path.append("..")
+sys.path.append('..')
 from Game import Game
 from .TicTacToeLogic import Board
 import numpy as np
@@ -18,50 +18,83 @@ Based on the OthelloGame by Surag Nair.
 
 
 class TicTacToeGame(Game):
-    def __init__(self, n=3):
+    def __init__(self, n=3, p=9):
         self.n = n
+        self.p = p
 
     def getInitBoard(self):
         # return initial board (numpy board)
-        b = Board(self.n)
+        b = Board(n=self.n, p=self.p)
         return np.array(b.pieces)
 
     def getBoardSize(self):
         # (a,b) tuple
-        return (self.n, self.n)
+        return (self.n, self.p)
 
     def getActionSize(self):
         # return number of actions
-        return self.n * self.n + 1
+        return self.n * self.p + 1
 
     def getNextState(self, board, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
-        if action == self.n * self.n:
+        if action == self.n * self.p:
             return (board, -player)
-        b = Board(self.n)
+        b = Board(n=self.n, p=self.p)
         b.pieces = np.copy(board)
-        move = (int(action / self.n), action % self.n)
+
+        hell = [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [0, 4],
+            [0, 5],
+            [0, 6],
+            [0, 7],
+            [0, 8],
+
+            [1, 0],
+            [1, 1],
+            [1, 2],
+            [1, 3],
+            [1, 4],
+            [1, 5],
+            [1, 6],
+            [1, 7],
+            [1, 8],
+
+            [2, 0],
+            [2, 1],
+            [2, 2],
+            [2, 3],
+            [2, 4],
+            [2, 5],
+            [2, 6],
+            [2, 7],
+            [2, 8]
+        ]
+        move = hell[action]
         b.execute_move(move, player)
-        return (b.pieces, -player)
+        return b.pieces, -player
 
     def getValidMoves(self, board, player):
         # return a fixed size binary vector
         valids = [0] * self.getActionSize()
-        b = Board(self.n)
+        b = Board(n=self.n, p=self.p)
         b.pieces = np.copy(board)
         legalMoves = b.get_legal_moves(player)
         if len(legalMoves) == 0:
             valids[-1] = 1
             return np.array(valids)
         for x, y in legalMoves:
-            valids[self.n * x + y] = 1
+            valids[self.p * x + y] = 1
         return np.array(valids)
 
     def getGameEnded(self, board, player):
         # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
         # player = 1
-        b = Board(self.n)
+        b = Board(n=self.n, p=self.p)
         b.pieces = np.copy(board)
 
         if b.is_win(player):
@@ -70,7 +103,7 @@ class TicTacToeGame(Game):
             return -1
         if b.has_legal_moves():
             return 0
-        # draw has a very little value
+        # draw has a very little value 
         return 1e-4
 
     def getCanonicalForm(self, board, player):
@@ -79,8 +112,8 @@ class TicTacToeGame(Game):
 
     def getSymmetries(self, board, pi):
         # mirror, rotational
-        assert len(pi) == self.n ** 2 + 1  # 1 for pass
-        pi_board = np.reshape(pi[:-1], (self.n, self.n))
+        assert (len(pi) == self.n * self.p + 1)  # 1 for pass
+        pi_board = np.reshape(pi[:-1], (self.p, self.n))
         l = []
 
         for i in range(1, 5):

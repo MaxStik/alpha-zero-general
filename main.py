@@ -3,26 +3,26 @@ from othello.OthelloGame import OthelloGame
 from othello.pytorch.NNet import NNetWrapper as nn
 from utils import *
 
-args = dotdict(
-    {
-        "numIters": 1000,
-        "numEps": 100,
-        "tempThreshold": 15,
-        "updateThreshold": 0.6,
-        "maxlenOfQueue": 200000,
-        "numMCTSSims": 25,
-        "arenaCompare": 40,
-        "cpuct": 1,
-        "dirAlpha": 0.3,
-        "epsilon": 0.25,
-        "checkpoint": "./temp/",
-        "load_model": False,
-        "load_folder_file": ("/dev/models/8x100x50", "best.pth.tar"),
-        "numItersForTrainExamplesHistory": 20,
-    }
-)
+args = dotdict({
+    'numIters': 1000,
+    'numEps': 100,
+    'tempThreshold': 15,
+    'updateThreshold': 0.6,
+    'maxlenOfQueue': 200000,
+    'numMCTSSims': 25,
+    'arenaCompare': 40,
+    'cpuct': 1,
+    'dirAlpha': 0.3,
+    'epsilon': 0.25, 
 
-if __name__ == "__main__":
+    'checkpoint': './temp/',
+    'load_model': False,
+    'load_folder_file': ('/dev/models/8x100x50','best.pth.tar'),
+    'numItersForTrainExamplesHistory': 20,
+
+})
+
+if __name__=="__main__":
     g = OthelloGame(6)
     nnet = nn(g)
 

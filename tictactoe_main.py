@@ -3,23 +3,23 @@ from tictactoe.TicTacToeGame import TicTacToeGame
 from tictactoe.keras.NNet import NNetWrapper as nn
 from utils import *
 
-args = dotdict(
-    {
-        "numIters": 10,
-        "numEps": 25,
-        "tempThreshold": 15,
-        "updateThreshold": 0.55,
-        "maxlenOfQueue": 200000,
-        "numMCTSSims": 25,
-        "arenaCompare": 50,
-        "cpuct": 1,
-        "checkpoint": "./temp/tictactoe/",
-        "load_model": False,
-        "load_folder_file": ("./models/tictactoe/10x25x25", "best.pth.tar"),
-    }
-)
+args = dotdict({
+    'numIters': 10,
+    'numEps': 10,
+    'tempThreshold': 5,
+    'updateThreshold': 0.55,
+    'maxlenOfQueue': 200000,
+    'numMCTSSims': 25,
+    'numItersForTrainExamplesHistory': 20,
+    'arenaCompare': 50,
+    'cpuct': 1,
 
-if __name__ == "__main__":
+    'checkpoint': './temp/tictactoe/',
+    'load_model': False,
+    'load_folder_file': ('./models/tictactoe/10x25x25','best.pth.tar'),
+})
+
+if __name__=="__main__":
     g = TicTacToeGame()
     nnet = nn(g)
 

@@ -4,11 +4,10 @@ import torch.nn.functional as F
 import math
 
 
-__all__ = ["densenet"]
+__all__ = ['densenet']
 
 
 from torch.autograd import Variable
-
 
 class Bottleneck(nn.Module):
     def __init__(self, inplanes, expansion=4, growthRate=12, dropRate=0):
@@ -17,7 +16,8 @@ class Bottleneck(nn.Module):
         self.bn1 = nn.BatchNorm2d(inplanes)
         self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, growthRate, kernel_size=3, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(planes, growthRate, kernel_size=3, 
+                               padding=1, bias=False)
         self.relu = nn.ReLU(inplace=True)
         self.dropRate = dropRate
 
@@ -41,9 +41,8 @@ class BasicBlock(nn.Module):
         super(BasicBlock, self).__init__()
         planes = expansion * growthRate
         self.bn1 = nn.BatchNorm2d(inplanes)
-        self.conv1 = nn.Conv2d(
-            inplanes, growthRate, kernel_size=3, padding=1, bias=False
-        )
+        self.conv1 = nn.Conv2d(inplanes, growthRate, kernel_size=3, 
+                               padding=1, bias=False)
         self.relu = nn.ReLU(inplace=True)
         self.dropRate = dropRate
 
@@ -63,7 +62,8 @@ class Transition(nn.Module):
     def __init__(self, inplanes, outplanes):
         super(Transition, self).__init__()
         self.bn1 = nn.BatchNorm2d(inplanes)
-        self.conv1 = nn.Conv2d(inplanes, outplanes, kernel_size=1, bias=False)
+        self.conv1 = nn.Conv2d(inplanes, outplanes, kernel_size=1,
+                               bias=False)
         self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
@@ -75,18 +75,12 @@ class Transition(nn.Module):
 
 
 class DenseNet(nn.Module):
-    def __init__(
-        self,
-        depth=22,
-        block=Bottleneck,
-        dropRate=0,
-        num_classes=10,
-        growthRate=12,
-        compressionRate=2,
-    ):
+
+    def __init__(self, depth=22, block=Bottleneck, 
+        dropRate=0, num_classes=10, growthRate=12, compressionRate=2):
         super(DenseNet, self).__init__()
 
-        assert (depth - 4) % 3 == 0, "depth should be 3n+4"
+        assert (depth - 4) % 3 == 0, 'depth should be 3n+4'
         n = (depth - 4) / 3 if block == BasicBlock else (depth - 4) // 6
 
         self.growthRate = growthRate
@@ -94,8 +88,9 @@ class DenseNet(nn.Module):
 
         # self.inplanes is a global variable used across multiple
         # helper functions
-        self.inplanes = growthRate * 2
-        self.conv1 = nn.Conv2d(3, self.inplanes, kernel_size=3, padding=1, bias=False)
+        self.inplanes = growthRate * 2 
+        self.conv1 = nn.Conv2d(3, self.inplanes, kernel_size=3, padding=1,
+                               bias=False)
         self.dense1 = self._make_denseblock(block, n)
         self.trans1 = self._make_transition(compressionRate)
         self.dense2 = self._make_denseblock(block, n)
@@ -110,7 +105,7 @@ class DenseNet(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-                m.weight.data.normal_(0, math.sqrt(2.0 / n))
+                m.weight.data.normal_(0, math.sqrt(2. / n))
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
@@ -119,9 +114,7 @@ class DenseNet(nn.Module):
         layers = []
         for i in range(blocks):
             # Currently we fix the expansion ratio as the default value
-            layers.append(
-                block(self.inplanes, growthRate=self.growthRate, dropRate=self.dropRate)
-            )
+            layers.append(block(self.inplanes, growthRate=self.growthRate, dropRate=self.dropRate))
             self.inplanes += self.growthRate
 
         return nn.Sequential(*layers)
@@ -132,11 +125,12 @@ class DenseNet(nn.Module):
         self.inplanes = outplanes
         return Transition(inplanes, outplanes)
 
+
     def forward(self, x):
         x = self.conv1(x)
 
-        x = self.trans1(self.dense1(x))
-        x = self.trans2(self.dense2(x))
+        x = self.trans1(self.dense1(x)) 
+        x = self.trans2(self.dense2(x)) 
         x = self.dense3(x)
         x = self.bn(x)
         x = self.relu(x)
