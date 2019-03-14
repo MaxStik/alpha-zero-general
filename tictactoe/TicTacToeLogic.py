@@ -183,7 +183,7 @@ class Board():
         win_array_5 = [color for _ in range(5)]
         board = np.copy(self.pieces)
         transposed_array = board.transpose()
-        flipped_array = np.flip(board)
+        flipped_array = np.fliplr(board)   # todo test for diagonales direction change
 
         # Ось X
         for x in range(self.n):
