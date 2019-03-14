@@ -167,9 +167,9 @@ class Board():
 
     def get_wins_in_board(self, board):
         wins = []
-        max_x = 8
+        max_x = 40
         max_y = 2
-        for x in range(8):
+        for x in range(40):
             for y in range(2):
                 x1 = x
                 y1 = y
