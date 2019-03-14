@@ -39,7 +39,7 @@ class TicTacToeGame(Game):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
         if action == self.n * self.p:
-            return (board, -player)
+            return board, -player
         b = Board(n=self.n, p=self.p)
         b.pieces = np.copy(board)
 
@@ -113,18 +113,18 @@ class TicTacToeGame(Game):
     def getSymmetries(self, board, pi):
         # mirror, rotational
         assert (len(pi) == self.n * self.p + 1)  # 1 for pass
-        pi_board = np.reshape(pi[:-1], (self.p, self.n))
-        l = []
-
-        for i in range(1, 5):
-            for j in [True, False]:
-                newB = np.rot90(board, i)
-                newPi = np.rot90(pi_board, i)
-                if j:
-                    newB = np.fliplr(newB)
-                    newPi = np.fliplr(newPi)
-                l += [(newB, list(newPi.ravel()) + [pi[-1]])]
-        return l
+        # pi_board = np.reshape(pi[:-1], (self.p, self.n))
+        # l = []
+        #
+        # for i in range(1, 5):
+        #     for j in [True, False]:
+        #         newB = np.rot90(board, i)
+        #         newPi = np.rot90(pi_board, i)
+        #         if j:
+        #             newB = np.fliplr(newB)
+        #             newPi = np.fliplr(newPi)
+        #         l += [(newB, list(newPi.ravel()) + [pi[-1]])]
+        return [[board, pi]]
 
     def stringRepresentation(self, board):
         # 8x8 numpy array (canonical board)
@@ -133,18 +133,19 @@ class TicTacToeGame(Game):
 
 def display(board):
     n = board.shape[0]
+    p = board.shape[1]
 
     print("   ", end="")
-    for y in range(n):
+    for y in range(p):
         print(y, "", end="")
     print("")
     print("  ", end="")
-    for _ in range(n):
+    for _ in range(p):
         print("-", end="-")
     print("--")
     for y in range(n):
         print(y, "|", end="")  # print the row #
-        for x in range(n):
+        for x in range(p):
             piece = board[y][x]  # get the piece to print
             if piece == -1:
                 print("X ", end="")
@@ -152,12 +153,12 @@ def display(board):
                 print("O ", end="")
             else:
                 if x == n:
-                    print("-", end="")
+                    print("- ", end="")
                 else:
                     print("- ", end="")
         print("|")
 
     print("  ", end="")
-    for _ in range(n):
+    for _ in range(p):
         print("-", end="-")
     print("--")

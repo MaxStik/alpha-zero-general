@@ -57,64 +57,17 @@ class Board():
                     return True
         return False
 
-    def get_values_from_board(self, board: list):
+    def get_values_from_board(self, board, winners):
         seq = []
-        winners = [
-            [
-                [0, 0],
-                [1, 0],
-                [2, 0]
-            ],
-            [
-                [0, 1],
-                [1, 1],
-                [2, 1]
-            ],
-            [
-                [0, 2],
-                [1, 2],
-                [2, 2]
-            ],
-            [
-                [0, 3],
-                [1, 3],
-                [2, 3]
-            ],
-            [
-                [0, 4],
-                [1, 4],
-                [2, 4]
-            ],
-            [
-                [0, 5],
-                [1, 5],
-                [2, 5]
-            ],
-            [
-                [0, 6],
-                [1, 6],
-                [2, 6]
-            ],
-            [
-                [0, 7],
-                [1, 7],
-                [2, 7]
-            ],
-            [
-                [0, 8],
-                [1, 8],
-                [2, 8]
-            ],
-        ]
         for vector in winners:
             local_seq = []
             for item in vector:
-                local_seq.append(board[item[0], item[1]])
+                local_seq.append(board[item[1], item[0]])
             seq.append(local_seq)
         return seq
 
-    def is_win_from_seq(self, board, winner):
-        winners_combs = self.get_values_from_board(board)
+    def is_win_from_seq(self, board, winners, winner):
+        winners_combs = self.get_values_from_board(board, winners)
         if winner in winners_combs:
             return True
         return False
@@ -171,6 +124,7 @@ class Board():
         @param color (1=white,-1=black)
         """
         win_array_3 = [color for _ in range(3)]
+        win_array_5 = [color for _ in range(5)]
         board = np.copy(self.pieces)
         transposed_array = board.transpose()
         flipped_array = np.flip(board)
@@ -178,7 +132,7 @@ class Board():
         # Ось X
         for x in range(self.n):
             x_array = board[x]
-            if len(self.find_subsequence(x_array, win_array_3)) > 0:
+            if len(self.find_subsequence(x_array, win_array_5)) > 0:
                 return True
 
         # Ось Y
@@ -187,17 +141,15 @@ class Board():
             if len(self.find_subsequence(x_array, win_array_3)) > 0:
                 return True
 
-        # Диагонали - главная
-        for diagonal in range(board.shape[1] - 1, -board.shape[0], -1):
-            diag = board.diagonal(diagonal)
-            if self.find_subsequence(diag, win_array_3):
-                return True
 
-        # Диагонали - побочная
-        for diagonal in range(flipped_array.shape[1] - 1, -flipped_array.shape[0], -1):
-            diag = flipped_array.diagonal(diagonal)
-            if self.find_subsequence(diag, win_array_3):
-                return True
+        # Диагонали
+        wins = self.get_wins_in_board(board)
+        wins_reverted = self.get_wins_in_board(flipped_array)
+
+        a = self.is_win_from_seq(board, wins, win_array_5)
+        b = self.is_win_from_seq(board, wins_reverted, win_array_5)
+        if a or b:
+            return True
 
         # Если ничего не нашли то False
         return False
@@ -213,3 +165,55 @@ class Board():
         assert self[x][y] == 0
         self[x][y] = color
 
+    def get_wins_in_board(self, board):
+        wins = []
+        max_x = 8
+        max_y = 2
+        for x in range(8):
+            for y in range(2):
+                x1 = x
+                y1 = y
+
+                if x1 > max_x:
+                    x1 = x1 - max_x - 1
+                if y1 > max_y:
+                    y1 = y1 - max_y - 1
+
+                cell1 = [x1, y1]
+
+                x1 += 1
+                y1 += 1
+                if x1 > max_x:
+                    x1 = x1 - max_x - 1
+                if y1 > max_y:
+                    y1 = y1 - max_y - 1
+
+                cell2 = [x1, y1]
+
+                x1 += 1
+                y1 += 1
+                if x1 > max_x:
+                    x1 = x1 - max_x - 1
+                if y1 > max_y:
+                    y1 = y1 - max_y - 1
+                cell3 = [x1, y1]
+
+                x1 += 1
+                y1 += 1
+                if x1 > max_x:
+                    x1 = x1 - max_x - 1
+                if y1 > max_y:
+                    y1 = y1 - max_y - 1
+                cell4 = [x1, y1]
+
+                x1 += 1
+                y1 += 1
+                if x1 > max_x:
+                    x1 = x1 - max_x - 1
+                if y1 > max_y:
+                    y1 = y1 - max_y - 1
+                cell5 = [x1, y1]
+
+                win = [cell1, cell2, cell3, cell4, cell5]
+                wins.append(win)
+        return wins
