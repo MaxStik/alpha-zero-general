@@ -4,7 +4,7 @@ from tictactoe.keras.NNet import NNetWrapper as nn
 from utils import *
 
 args = dotdict({
-    'numIters': 5,
+    'numIters': 10,
     'numEps': 25,
     'tempThreshold': 10,
     'updateThreshold': 0.55,
@@ -18,6 +18,10 @@ args = dotdict({
     'load_model': False,
     'load_folder_file': ('./models/tictactoe/10x25x25','best.pth.tar'),
 })
+
+
+
+
 
 if __name__=="__main__":
     g = TicTacToeGame()

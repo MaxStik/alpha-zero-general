@@ -18,10 +18,66 @@ Based on the board for the game of Othello by Eric P. Nichols.
 import numpy as np
 
 
-class Board():
+def get_wins_in_board():
+    wins = []
+    max_x = 40
+    max_y = 2
+    for x in range(40):
+        for y in range(2):
+            x1 = x
+            y1 = y
 
+            if x1 > max_x:
+                x1 = x1 - max_x - 1
+            if y1 > max_y:
+                y1 = y1 - max_y - 1
+
+            cell1 = [x1, y1]
+
+            x1 += 1
+            y1 += 1
+            if x1 > max_x:
+                x1 = x1 - max_x - 1
+            if y1 > max_y:
+                y1 = y1 - max_y - 1
+
+            cell2 = [x1, y1]
+
+            x1 += 1
+            y1 += 1
+            if x1 > max_x:
+                x1 = x1 - max_x - 1
+            if y1 > max_y:
+                y1 = y1 - max_y - 1
+            cell3 = [x1, y1]
+
+            x1 += 1
+            y1 += 1
+            if x1 > max_x:
+                x1 = x1 - max_x - 1
+            if y1 > max_y:
+                y1 = y1 - max_y - 1
+            cell4 = [x1, y1]
+
+            x1 += 1
+            y1 += 1
+            if x1 > max_x:
+                x1 = x1 - max_x - 1
+            if y1 > max_y:
+                y1 = y1 - max_y - 1
+            cell5 = [x1, y1]
+
+            win = [cell1, cell2, cell3, cell4, cell5]
+            wins.append(win)
+    return wins
+
+
+wins = get_wins_in_board()
+
+
+class Board():
     # list of all 8 directions on the board, as (x,y) offsets
-    __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
+    __directions = [(1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1)]
 
     def __init__(self, p, n=3):
         "Set up initial board configuration."
@@ -45,15 +101,15 @@ class Board():
         # Get all the empty squares (color==0)
         for y in range(self.p):
             for x in range(self.n):
-                if self[x][y]==0:
-                    newmove = (x,y)
+                if self[x][y] == 0:
+                    newmove = (x, y)
                     moves.add(newmove)
         return list(moves)
 
     def has_legal_moves(self):
         for y in range(self.p):
             for x in range(self.n):
-                if self[x][y]==0:
+                if self[x][y] == 0:
                     return True
         return False
 
@@ -82,30 +138,30 @@ class Board():
         for y in range(self.p):
             count = 0
             for x in range(self.n):
-                if self[x][y]==color:
+                if self[x][y] == color:
                     count += 1
-            if count==win:
+            if count == win:
                 return True
         # # check x-strips
         for x in range(self.n):
             count = 0
             for y in range(self.p):
-                if self[x][y]==color:
+                if self[x][y] == color:
                     count += 1
-            if count==win:
+            if count == win:
                 return True
         # check two diagonal strips
         count = 0
         for d in range(self.n):
-            if self[d][d]==color:
+            if self[d][d] == color:
                 count += 1
-        if count==win:
+        if count == win:
             return True
         count = 0
         for d in range(self.n):
-            if self[d][self.n-d-1]==color:
+            if self[d][self.n - d - 1] == color:
                 count += 1
-        if count==win:
+        if count == win:
             return True
 
         return False
@@ -141,13 +197,11 @@ class Board():
             if len(self.find_subsequence(x_array, win_array_3)) > 0:
                 return True
 
-
         # Диагонали
-        wins = self.get_wins_in_board(board)
-        wins_reverted = self.get_wins_in_board(flipped_array)
+        wins_arr = wins
 
         a = self.is_win_from_seq(board, wins, win_array_5)
-        b = self.is_win_from_seq(board, wins_reverted, win_array_5)
+        b = self.is_win_from_seq(flipped_array, wins_arr, win_array_5)
         if a or b:
             return True
 
@@ -159,61 +213,61 @@ class Board():
         color gives the color pf the piece to play (1=white,-1=black)
         """
 
-        (x,y) = move
+        (x, y) = move
 
         # Add the piece to the empty square.
         assert self[x][y] == 0
         self[x][y] = color
-
-    def get_wins_in_board(self, board):
-        wins = []
-        max_x = 40
-        max_y = 2
-        for x in range(40):
-            for y in range(2):
-                x1 = x
-                y1 = y
-
-                if x1 > max_x:
-                    x1 = x1 - max_x - 1
-                if y1 > max_y:
-                    y1 = y1 - max_y - 1
-
-                cell1 = [x1, y1]
-
-                x1 += 1
-                y1 += 1
-                if x1 > max_x:
-                    x1 = x1 - max_x - 1
-                if y1 > max_y:
-                    y1 = y1 - max_y - 1
-
-                cell2 = [x1, y1]
-
-                x1 += 1
-                y1 += 1
-                if x1 > max_x:
-                    x1 = x1 - max_x - 1
-                if y1 > max_y:
-                    y1 = y1 - max_y - 1
-                cell3 = [x1, y1]
-
-                x1 += 1
-                y1 += 1
-                if x1 > max_x:
-                    x1 = x1 - max_x - 1
-                if y1 > max_y:
-                    y1 = y1 - max_y - 1
-                cell4 = [x1, y1]
-
-                x1 += 1
-                y1 += 1
-                if x1 > max_x:
-                    x1 = x1 - max_x - 1
-                if y1 > max_y:
-                    y1 = y1 - max_y - 1
-                cell5 = [x1, y1]
-
-                win = [cell1, cell2, cell3, cell4, cell5]
-                wins.append(win)
-        return wins
+    #
+    # def get_wins_in_board(self):
+    #     wins = []
+    #     max_x = 40
+    #     max_y = 2
+    #     for x in range(40):
+    #         for y in range(2):
+    #             x1 = x
+    #             y1 = y
+    #
+    #             if x1 > max_x:
+    #                 x1 = x1 - max_x - 1
+    #             if y1 > max_y:
+    #                 y1 = y1 - max_y - 1
+    #
+    #             cell1 = [x1, y1]
+    #
+    #             x1 += 1
+    #             y1 += 1
+    #             if x1 > max_x:
+    #                 x1 = x1 - max_x - 1
+    #             if y1 > max_y:
+    #                 y1 = y1 - max_y - 1
+    #
+    #             cell2 = [x1, y1]
+    #
+    #             x1 += 1
+    #             y1 += 1
+    #             if x1 > max_x:
+    #                 x1 = x1 - max_x - 1
+    #             if y1 > max_y:
+    #                 y1 = y1 - max_y - 1
+    #             cell3 = [x1, y1]
+    #
+    #             x1 += 1
+    #             y1 += 1
+    #             if x1 > max_x:
+    #                 x1 = x1 - max_x - 1
+    #             if y1 > max_y:
+    #                 y1 = y1 - max_y - 1
+    #             cell4 = [x1, y1]
+    #
+    #             x1 += 1
+    #             y1 += 1
+    #             if x1 > max_x:
+    #                 x1 = x1 - max_x - 1
+    #             if y1 > max_y:
+    #                 y1 = y1 - max_y - 1
+    #             cell5 = [x1, y1]
+    #
+    #             win = [cell1, cell2, cell3, cell4, cell5]
+    #             wins.append(win)
+    #     return wins
