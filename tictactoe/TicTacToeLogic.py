@@ -20,9 +20,9 @@ import numpy as np
 
 def get_wins_in_board():
     wins = []
-    max_x = 40
+    max_x = 7
     max_y = 2
-    for x in range(40):
+    for x in range(7):
         for y in range(2):
             x1 = x
             y1 = y
