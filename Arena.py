@@ -41,7 +41,7 @@ class Arena():
             it+=1
             if verbose:
                 assert(self.display)
-                print("Turn ", str(it), "Player ", str(curPlayer))
+                print("Ход номер:  ", str(it), "Игрок ", self.get_winner_name_from_int(curPlayer))
                 self.display(board)
             action = players[curPlayer+1](self.game.getCanonicalForm(board, curPlayer))
 
@@ -51,9 +51,21 @@ class Arena():
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
         if verbose:
             assert(self.display)
-            print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
+            print("Игра окончена: Кол-во ходов ", str(it), "Победитель ", self.get_winner_name_from_int(self.game.getGameEnded(board, 1)))
             self.display(board)
         return self.game.getGameEnded(board, 1)
+
+    @staticmethod
+    def get_winner_name_from_int(value: int) -> str:
+
+        default_value = 'Ничья'
+        if value == 1:
+            str_value = 'O'
+        elif value == -1:
+            str_value = 'X'
+        else:
+            str_value = default_value
+        return str_value
 
     def playGames(self, num, verbose=False):
         """

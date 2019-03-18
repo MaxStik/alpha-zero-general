@@ -183,7 +183,7 @@ class Board():
         win_array_5 = [color for _ in range(5)]
         board = np.copy(self.pieces)
         transposed_array = board.transpose()
-        flipped_array = np.fliplr(board)   # todo test for diagonales direction change
+        flipped_array = np.fliplr(board)
 
         # Ось X
         for x in range(self.n):
@@ -218,56 +218,3 @@ class Board():
         # Add the piece to the empty square.
         assert self[x][y] == 0
         self[x][y] = color
-    #
-    # def get_wins_in_board(self):
-    #     wins = []
-    #     max_x = 40
-    #     max_y = 2
-    #     for x in range(40):
-    #         for y in range(2):
-    #             x1 = x
-    #             y1 = y
-    #
-    #             if x1 > max_x:
-    #                 x1 = x1 - max_x - 1
-    #             if y1 > max_y:
-    #                 y1 = y1 - max_y - 1
-    #
-    #             cell1 = [x1, y1]
-    #
-    #             x1 += 1
-    #             y1 += 1
-    #             if x1 > max_x:
-    #                 x1 = x1 - max_x - 1
-    #             if y1 > max_y:
-    #                 y1 = y1 - max_y - 1
-    #
-    #             cell2 = [x1, y1]
-    #
-    #             x1 += 1
-    #             y1 += 1
-    #             if x1 > max_x:
-    #                 x1 = x1 - max_x - 1
-    #             if y1 > max_y:
-    #                 y1 = y1 - max_y - 1
-    #             cell3 = [x1, y1]
-    #
-    #             x1 += 1
-    #             y1 += 1
-    #             if x1 > max_x:
-    #                 x1 = x1 - max_x - 1
-    #             if y1 > max_y:
-    #                 y1 = y1 - max_y - 1
-    #             cell4 = [x1, y1]
-    #
-    #             x1 += 1
-    #             y1 += 1
-    #             if x1 > max_x:
-    #                 x1 = x1 - max_x - 1
-    #             if y1 > max_y:
-    #                 y1 = y1 - max_y - 1
-    #             cell5 = [x1, y1]
-    #
-    #             win = [cell1, cell2, cell3, cell4, cell5]
-    #             wins.append(win)
-    #     return wins
